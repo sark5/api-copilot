@@ -15,7 +15,7 @@ export default function RefineBox({
     <div style={{ width: "80%" }}>
       {/* ⬜ TEXTAREA — UNCHANGED */}
       <textarea
-        placeholder='Refine spec (e.g. "Add authentication to all APIs")'
+        placeholder='Refine spec (e.g. "Require authentication to all APIs")'
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={5}

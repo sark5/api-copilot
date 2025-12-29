@@ -5,102 +5,135 @@ import { SpecOutput } from "@/types/spec";
 import Tabs from "./Tabs";
 import Collapsible from "./Collapsible";
 
-function OutputSections({ spec }: { spec: SpecOutput }) {
-  const sectionWrapper = { padding: "10px 0" };
+/* ---------- STYLES (DARK THEME SAFE) ---------- */
 
+const sectionWrapper: React.CSSProperties = {
+  padding: "10px 0",
+};
+
+const sectionHeaderStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px 14px",
+  borderRadius: "8px",
+  border: "1px solid #334155", // subtle, no glow
+  background: "#020617",       // dark neutral
+  color: "#e5e7eb",
+  fontWeight: 600,
+  userSelect: "none",
+};
+
+const jsonBlockStyle: React.CSSProperties = {
+  background: "#0f172a",
+  color: "#e5e7eb",
+  padding: "14px",
+  borderRadius: "8px",
+  marginTop: "12px",
+  fontSize: "13px",
+  lineHeight: "1.6",
+  overflowX: "auto",
+};
+
+/* ---------- COMPONENT ---------- */
+
+function OutputSections({ spec }: { spec: SpecOutput }) {
   const tabs = useMemo(
     () => [
+      // -------- MODULES & FEATURES --------
       {
         key: "modules",
         label: "Modules & Features",
         content: (
           <div style={sectionWrapper}>
-            {spec.modules.map((m) => (
-              <div key={m} style={{ marginBottom: "12px" }}>
-                <b style={{ fontSize: "16px" }}>{m}</b>
-                <Collapsible>
-                  <ul style={{ marginTop: "6px" }}>
-                    {spec.features_by_module[m]?.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                </Collapsible>
-              </div>
-            ))}
+            <div style={sectionHeaderStyle}>Modules & Features</div>
+            <Collapsible>
+              <pre style={jsonBlockStyle}>
+                {JSON.stringify(
+                  {
+                    modules: spec.modules,
+                    features_by_module: spec.features_by_module,
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </Collapsible>
           </div>
         ),
       },
 
+      // -------- USER STORIES --------
       {
         key: "stories",
         label: "User Stories",
         content: (
           <div style={sectionWrapper}>
-            <b>User Stories</b>
+            <div style={sectionHeaderStyle}>User Stories</div>
             <Collapsible>
-              <ul style={{ marginTop: "8px" }}>
-                {spec.user_stories.map((s) => (
-                  <li key={s.id} style={{ marginBottom: "10px" }}>
-                    <b>{s.id}</b> — As a <b>{s.as_a}</b>, I want{" "}
-                    <b>{s.i_want}</b>, so that <b>{s.so_that}</b>.
-                    <br />
-                    <small style={{ color: "#666" }}>
-                      Module: {s.module}
-                    </small>
-                  </li>
+              <div>
+                {spec.user_stories.map((story) => (
+                  <pre key={story.id} style={jsonBlockStyle}>
+                    {JSON.stringify(
+                      {
+                        id: story.id,
+                        as_a: story.as_a,
+                        i_want: story.i_want,
+                        so_that: story.so_that,
+                        module: story.module,
+                      },
+                      null,
+                      2
+                    )}
+                  </pre>
                 ))}
-              </ul>
+              </div>
             </Collapsible>
           </div>
         ),
       },
 
+      // -------- API ENDPOINTS --------
       {
         key: "apis",
         label: "API Endpoints",
         content: (
           <div style={sectionWrapper}>
-            <b>API Endpoints</b>
+            <div style={sectionHeaderStyle}>API Endpoints</div>
             <Collapsible>
-              <pre style={{ whiteSpace: "pre-wrap" }}>
-                {spec.api_endpoints.length === 0
-                  ? "No API endpoints generated"
-                  : JSON.stringify(spec.api_endpoints, null, 2)}
+              <pre style={jsonBlockStyle}>
+                {JSON.stringify(spec.api_endpoints, null, 2)}
               </pre>
             </Collapsible>
           </div>
         ),
       },
 
+      // -------- DB SCHEMA --------
       {
         key: "db",
         label: "DB Schema",
         content: (
           <div style={sectionWrapper}>
-            <b>Database Schema</b>
+            <div style={sectionHeaderStyle}>Database Schema</div>
             <Collapsible>
-              <pre style={{ whiteSpace: "pre-wrap" }}>
-                {spec.db_schema.length === 0
-                  ? "No DB schema generated"
-                  : JSON.stringify(spec.db_schema, null, 2)}
+              <pre style={jsonBlockStyle}>
+                {JSON.stringify(spec.db_schema, null, 2)}
               </pre>
             </Collapsible>
           </div>
         ),
       },
 
+      // -------- OPEN QUESTIONS --------
       {
         key: "questions",
         label: "Open Questions",
         content: (
           <div style={sectionWrapper}>
-            <b>Open Questions</b>
+            <div style={sectionHeaderStyle}>Open Questions</div>
             <Collapsible>
-              <ul>
-                {spec.open_questions.map((q, i) => (
-                  <li key={i}>{q}</li>
-                ))}
-              </ul>
+              <pre style={jsonBlockStyle}>
+                {JSON.stringify(spec.open_questions, null, 2)}
+              </pre>
             </Collapsible>
           </div>
         ),
