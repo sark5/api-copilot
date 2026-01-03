@@ -5,7 +5,7 @@ import { SpecOutput } from "@/types/spec";
 import Tabs from "./Tabs";
 import Collapsible from "./Collapsible";
 
-/* ---------- STYLES (DARK THEME SAFE) ---------- */
+/* ---------- STYLES ---------- */
 
 const sectionWrapper: React.CSSProperties = {
   padding: "10px 0",
@@ -15,8 +15,8 @@ const sectionHeaderStyle: React.CSSProperties = {
   width: "100%",
   padding: "10px 14px",
   borderRadius: "8px",
-  border: "1px solid #334155", // subtle, no glow
-  background: "#020617",       // dark neutral
+  border: "1px solid #334155",
+  background: "#020617",
   color: "#e5e7eb",
   fontWeight: 600,
   userSelect: "none",
@@ -27,10 +27,17 @@ const jsonBlockStyle: React.CSSProperties = {
   color: "#e5e7eb",
   padding: "14px",
   borderRadius: "8px",
-  marginTop: "12px",
   fontSize: "13px",
   lineHeight: "1.6",
   overflowX: "auto",
+};
+
+/* ⭐ GRID for APIs / DB */
+const gridStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+  gap: "16px",
+  marginTop: "12px",
 };
 
 /* ---------- COMPONENT ---------- */
@@ -46,7 +53,7 @@ function OutputSections({ spec }: { spec: SpecOutput }) {
           <div style={sectionWrapper}>
             <div style={sectionHeaderStyle}>Modules & Features</div>
             <Collapsible>
-              <pre style={jsonBlockStyle}>
+              <pre style={{ ...jsonBlockStyle, marginTop: "12px" }}>
                 {JSON.stringify(
                   {
                     modules: spec.modules,
@@ -69,9 +76,9 @@ function OutputSections({ spec }: { spec: SpecOutput }) {
           <div style={sectionWrapper}>
             <div style={sectionHeaderStyle}>User Stories</div>
             <Collapsible>
-              <div>
+              <div style={{ marginTop: "12px" }}>
                 {spec.user_stories.map((story) => (
-                  <pre key={story.id} style={jsonBlockStyle}>
+                  <pre key={story.id} style={{ ...jsonBlockStyle, marginBottom: "12px" }}>
                     {JSON.stringify(
                       {
                         id: story.id,
@@ -91,7 +98,7 @@ function OutputSections({ spec }: { spec: SpecOutput }) {
         ),
       },
 
-      // -------- API ENDPOINTS --------
+      // -------- API ENDPOINTS (GRID FIX) --------
       {
         key: "apis",
         label: "API Endpoints",
@@ -99,15 +106,19 @@ function OutputSections({ spec }: { spec: SpecOutput }) {
           <div style={sectionWrapper}>
             <div style={sectionHeaderStyle}>API Endpoints</div>
             <Collapsible>
-              <pre style={jsonBlockStyle}>
-                {JSON.stringify(spec.api_endpoints, null, 2)}
-              </pre>
+              <div style={gridStyle}>
+                {spec.api_endpoints.map((api, idx) => (
+                  <pre key={idx} style={jsonBlockStyle}>
+                    {JSON.stringify(api, null, 2)}
+                  </pre>
+                ))}
+              </div>
             </Collapsible>
           </div>
         ),
       },
 
-      // -------- DB SCHEMA --------
+      // -------- DB SCHEMA (GRID FIX) --------
       {
         key: "db",
         label: "DB Schema",
@@ -115,9 +126,13 @@ function OutputSections({ spec }: { spec: SpecOutput }) {
           <div style={sectionWrapper}>
             <div style={sectionHeaderStyle}>Database Schema</div>
             <Collapsible>
-              <pre style={jsonBlockStyle}>
-                {JSON.stringify(spec.db_schema, null, 2)}
-              </pre>
+              <div style={gridStyle}>
+                {spec.db_schema.map((table, idx) => (
+                  <pre key={idx} style={jsonBlockStyle}>
+                    {JSON.stringify(table, null, 2)}
+                  </pre>
+                ))}
+              </div>
             </Collapsible>
           </div>
         ),
@@ -131,9 +146,13 @@ function OutputSections({ spec }: { spec: SpecOutput }) {
           <div style={sectionWrapper}>
             <div style={sectionHeaderStyle}>Open Questions</div>
             <Collapsible>
-              <pre style={jsonBlockStyle}>
-                {JSON.stringify(spec.open_questions, null, 2)}
-              </pre>
+              <div style={{ marginTop: "12px" }}>
+                {spec.open_questions.map((q, idx) => (
+                  <pre key={idx} style={{ ...jsonBlockStyle, marginBottom: "12px" }}>
+                    {JSON.stringify(q, null, 2)}
+                  </pre>
+                ))}
+              </div>
             </Collapsible>
           </div>
         ),
